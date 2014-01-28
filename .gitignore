@@ -1,0 +1,5 @@
+channels/*.json
+node
+node_modules
+settings.json
+*.sh

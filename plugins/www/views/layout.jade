@@ -1,0 +1,83 @@
+if !isAjax
+	!!!5
+	html
+		head
+			title Mikuia
+			link(rel='stylesheet', href='/css/bootstrap.min.css')
+			link(rel='stylesheet', href='/css/font-awesome.min.css')
+			link(rel='stylesheet', href='/css/mikuia.css')
+			script(type='text/javascript', src='//code.jquery.com/jquery-1.10.2.min.js')
+			script(type='text/javascript', src='/js/bootstrap.min.js')
+			script(type='text/javascript', src='/socket.io/socket.io.js')
+			script(type='text/javascript', src='/js/mikuia.js')
+			script(type='text/javascript', src='/js/jquery.timeago.js')
+			script(type='text/javascript', src='/js/jquery.history.js')
+			meta(name='viewport', content='width=device-width, initial-scale=1.0')
+			style(type='text/css').
+				body {
+					padding-top: 60px;
+				}
+		body
+			- console.log(user)
+			nav.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
+				.container.navbar-content
+					div.navbar-header
+						button.navbar-toggle(type='button', data-toggle='collapse', data-target='navbar-collapse')
+							span.sr-only Toggle navigation
+							span.icon-bar
+							span.icon-bar
+							span.icon-bar
+						a.navbar-brand(href='/') Mikuia
+					div.collapse.navbar-collapse#navbar-collapse
+						ul.nav.navbar-nav
+							li
+								a(href='/')
+									i.fa.fa-home
+									|  Home
+							li
+								a(href='/guide')
+									i.fa.fa-book
+									|  Guide
+							li
+								a(href='http://github.com/Maxorq/Mikuia', target='_blank')
+									i.fa.fa-github-alt
+									|  GitHub
+							li
+								a(style='color: #47D1FF; text-shadow: 0px 0px 10px #99E6FF;', href='https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=psqmaxor%40gmail%2ecom&lc=GB&item_name=Mikuia&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted', target='_blank')
+									i.fa.fa-money
+									|  Donate
+						ul.nav.navbar-nav.navbar-right
+							if !user
+								li
+									a.noajax(href='/auth/twitch') Login with Twitch
+							else
+								li.dropdown
+									a.dropdown-toggle(href='#', data-toggle='dropdown')
+										img(width='16', height='16', src='#{user._json.logo}')
+										|  #{user._json.display_name} 
+										b.caret
+									ul.dropdown-menu
+										li
+											a(href='/settings') Settings
+										li
+											a(href='/commands') Commands
+										li
+											a(href='/plugins') Plugins
+										li.divider
+										li
+											a.noajax(href='/logout') Logout
+				.container.navbar-alert(style='display: none;')
+					.navbar-brand Testing!!! Lelelelelleleellele
+		#content
+			block content
+			block footerScript
+		#spinner(style='display: none; position: absolute; left: 50%; top: 50%;')
+			img(src='/img/spinner.gif')
+		.container.text-muted
+			hr
+			.pull-right
+				| Made by 
+				a(href='http://github.com/Maxorq', target='_blank') Maxorq
+else
+	block content
+	block footerScript

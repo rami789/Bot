@@ -1,0 +1,115 @@
+extends layout
+
+block content
+	.jumbotron(style='margin-top: -60px;')
+		.container
+			.row
+				.col-md-8
+					h1
+						| Mikuia
+						span(style='font-size: 24px;')
+							|  for 
+							a(href='http://twitch.tv') Twitch.tv
+					p
+						| You stream games. We make the experience better. Open-source.
+						br
+						small Supports:
+						br
+						img.index-supported-img(src='/img/plugins/osu.png', rel='tooltip', data-toggle='tooltip', title='osu!')
+						br
+						.text-muted.text-small It'll get better. I promise.
+						br
+				.col-md-4
+					br
+					img.index-screenshot(src='/img/mikuia.png')
+			.row
+				.col-md-12
+					.btn-group.btn-group-justified
+						if !user
+							a.noajax(href='/auth/twitch').btn.btn-primary.btn-lg Login to use Mikuia!
+						else
+							a(href='/settings').btn.btn-primary.btn-lg Start using Mikuia!
+						a(href='https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=psqmaxor%40gmail%2ecom&lc=GB&item_name=Mikuia&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted', target='_blank').btn.btn-success.btn-lg Donate!
+						a(href='https://github.com/Maxorq/Mikuia/issues?labels=Bug&page=1&state=open', target='_blank').btn.btn-danger.btn-lg Report bugs!
+						a(href='https://github.com/Maxorq/Mikuia/issues?labels=Feature+Request&page=1&state=open', target='_blank').btn.btn-warning.btn-lg Request features!
+	.container
+		.col-md-6
+			h2
+				.glyphicon.glyphicon-send
+				|  Game Events
+			p
+				| Realtime event notifications.
+				br
+				| Rank changes, level results, match stats.
+				br
+				| Put the info in the chat for viewers, get it through Steam, save it somewhere.
+				br
+			h2
+				.glyphicon.glyphicon-stats
+				|  Chat Utilities
+			p
+				| Commands for checking ranks, points, and levels.
+				br
+				| Let your viewers check stats with a command instead of asking repeatedly.
+			h2
+				.glyphicon.glyphicon-flash
+				|  Plugin API
+			p
+				| Nearly every single feature is a part of a plugin.
+				br
+				| Add, delete, enable, disable plugins you want to.
+				br
+				| Customize your experience.
+		.col-md-6
+			h2 Latest Commits
+			if changelog != undefined
+				each commit in changelog
+					abbr.timeago(title=commit.commit.committer.date)
+					|  - 
+					a(href=commit.html_url) #{commit.commit.message}
+					br
+	if channels.length > 0
+		.jumbotron
+			.container
+				.col-md-8	
+					h1
+						| #{featuredChannel.display_name}
+						span(style='font-size: 24px;')
+							|  is using Mikuia! 
+							.badge
+								i.fa.fa-user(style='color: red;')
+								- var viewers = channels[channels.length - 1]
+								|  #{viewers}
+					h4
+						if Object.keys(featuredChannel.commands).length > 0
+							b Commands: 
+							each command, commandName in featuredChannel.commands
+								| #{commandName} 
+							br
+						if Object.keys(featuredChannel.plugins).length > 0
+							b Plugins: 
+							each plugin, pluginName in featuredChannel.plugins
+								| #{pluginName} 
+				.col-md-4
+					object.index-screenshot#live_embed_player_flash(type='application/x-shockwave-flash', height='183', width='340', data='http://www.twitch.tv/widgets/live_embed_player.swf?channel=#{featuredChannel.display_name}')
+						param(name='allowFullScreen', value='true')
+						param(name='allowScriptAccess', value='always')
+						param(name='allowNetworking', value='all')
+						param(name='movie', value='http://www.twitch.tv/widgets/live_embed_player.swf')
+						param(name='flashvars', value='hostname=www.twitch.tv&channel=#{featuredChannel.display_name}&auto_play=true&start_volume=25')
+				if Object.keys(streams).length > 1
+					.col-md-12
+						h3 Other Streams using Mikuia
+					each stream, channel in streams
+						if stream.channel.display_name != featuredChannel.display_name
+							.col-md-3(style='font-size: 16px;')
+								a(href=stream.channel.url)
+									img(src=stream.preview.medium, width='240', height='150')
+									| #{stream.channel.display_name} 
+									.badge
+										i.fa.fa-user(style='color: red;')
+										|  #{stream.viewers}
+block footerScript
+	script(type='text/javascript')
+		$('[rel="tooltip"]').tooltip()
+		$('abbr.timeago').timeago()
